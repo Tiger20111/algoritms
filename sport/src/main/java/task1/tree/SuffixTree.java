@@ -68,7 +68,8 @@ public class SuffixTree {
                 for (; p != -1 && states.get(p).get(c) == q; p = states.get(p).link) {
                     states.get(p).next.put(c, clone); //////////////////
                 }
-                states.get(q).link = states.get(cur).link = clone;
+                states.get(q).link = clone;
+                states.get(cur).link = clone;
             }
         }
         last = cur;
