@@ -3,13 +3,15 @@ package task1;
 import task1.tree.SuffixTree;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Application {
-    public static void main(String[] args) throws IOException {
-        File file = new File("/Users/tiger/IdeaProjects/algoritms/sport/src/main/java/task1/input.txt");
+    public static void main(String[] args) throws IOException, URISyntaxException {
+        File file = getFileFromResourceAsStream("input.txt");
         FileReader fr = new FileReader(file);
         BufferedReader reader = new BufferedReader(fr);
         String AStr = reader.readLine();
@@ -18,6 +20,21 @@ public class Application {
         BStr = BStr.substring(1, BStr.length() - 1);
 
         SolveTask(AStr, BStr);
+    }
+
+    private static File getFileFromResourceAsStream(String fileName) throws URISyntaxException {
+
+        ClassLoader classLoader = Application.class.getClassLoader();
+        URL resource = classLoader.getResource(fileName);
+        if (resource == null) {
+            throw new IllegalArgumentException("file not found! " + fileName);
+        } else {
+
+            // failed if files have whitespaces or special characters
+            //return new File(resource.getFile());
+
+            return new File(resource.toURI());
+        }
     }
 
     private static void SolveTask(String AStr, String BStr) {
