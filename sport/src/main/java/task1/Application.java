@@ -3,9 +3,9 @@ package task1;
 import task1.tree.SuffixTree;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Application {
     public static void main(String[] args) throws IOException {
@@ -21,13 +21,12 @@ public class Application {
     }
 
     private static void SolveTask(String AStr, String BStr) {
-        List<String> A = Arrays.asList(AStr.split("\\s,"));
-        List<String> B = Arrays.asList(AStr.split("\\s,"));
 
         SuffixTree suffixTree = new SuffixTree();
         String str = suffixTree.lsc(AStr.replaceAll(",", " "), BStr.replaceAll(",", " "));
-
-        List<String> pattern = Arrays.asList(str.split("\\s"));
+        List<Integer> pattern =Arrays.stream(str.split("\\s"))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
         System.out.println(pattern);
     }
 

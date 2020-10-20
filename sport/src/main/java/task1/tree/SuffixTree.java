@@ -3,7 +3,6 @@ package task1.tree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 class State {
     int len = 0;
@@ -16,9 +15,15 @@ class State {
         next = new HashMap<>();
     }
 
+    State(int len, int link, HashMap<Character, Integer> next) {
+        this.len = len;
+        this.link = link;
+        this.next = new HashMap<>(next);
+    }
+
     int get(Character c) {
         if (!next.containsKey(c)) {
-            return c;
+            return 0;
         }
         return next.get(c);
     }
@@ -58,9 +63,8 @@ public class SuffixTree {
                 states.get(cur).link = q;
             } else {
                 int clone = sz++;
-                states.get(clone).len = states.get(p).len + 1;
-                states.get(clone).next = states.get(q).next;
-                states.get(clone).link = states.get(q).link;
+                State stateClone = new State(states.get(p).len + 1, states.get(q).link, states.get(q).next);
+                states.add(clone, stateClone);
                 for (; p != -1 && states.get(p).get(c) == q; p = states.get(p).link) {
                     states.get(p).next.put(c, clone); //////////////////
                 }

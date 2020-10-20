@@ -1,4 +1,4 @@
-package com.company;
+package task2.graph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import static sun.swing.MenuItemLayoutHelper.max;
 public class Graph {
     Node root;
 
-    Graph(Node root){
+    public Graph(Node root){
         this.root = root;
     }
 

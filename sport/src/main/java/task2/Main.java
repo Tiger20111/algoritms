@@ -1,6 +1,7 @@
-package com.company;
+package task2;
 
-import sun.security.provider.certpath.Vertex;
+import task2.graph.Graph;
+import task2.graph.Node;
 
 import java.util.List;
 
