@@ -1,5 +1,7 @@
 package task1;
 
+import task1.tree.SuffixTree;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +24,11 @@ public class Application {
         List<String> A = Arrays.asList(AStr.split("\\s,"));
         List<String> B = Arrays.asList(AStr.split("\\s,"));
 
-        System.out.println(A);
+        SuffixTree suffixTree = new SuffixTree();
+        String str = suffixTree.lsc(AStr.replaceAll(",", " "), BStr.replaceAll(",", " "));
+
+        List<String> pattern = Arrays.asList(str.split("\\s"));
+        System.out.println(pattern);
     }
 
 }
