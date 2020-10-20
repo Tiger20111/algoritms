@@ -27,7 +27,7 @@ public class Application {
         List<Integer> pattern =Arrays.stream(str.split("\\s"))
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
-        System.out.println(pattern);
+        System.out.println(pattern.size());
     }
 
 }

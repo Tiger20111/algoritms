@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 class State {
-    int len = 0;
-    int link = 0;
+    int len;
+    int link;
     HashMap<Character, Integer> next;
 
     State(int len, int link) {
@@ -21,7 +21,7 @@ class State {
         this.next = new HashMap<>(next);
     }
 
-    int get(Character c) {
+    int stateChar(Character c) {
         if (!next.containsKey(c)) {
             return 0;
         }
@@ -31,79 +31,82 @@ class State {
 }
 
 public class SuffixTree {
-    private int sz;
-    private int last;
-    ArrayList<State> states;
+    private int numStates;
+    private int lastState;
+    private ArrayList<State> states;
 
     public SuffixTree() {
         states = new ArrayList<>();
     }
 
     private void saInit() {
-        sz = 0;
-        last = 0;
+        numStates = 0;
+        lastState = 0;
         states.add(new State(0, -1));
-        sz++;
+        numStates++;
     }
 
     private void saExtend(Character c) {
-        int cur = sz++;
-        State state = new State(states.get(last).len + 1, -1);
-        states.add(cur, state);
-        int p;
+        int curState = numStates++;
+        State state = new State(states.get(lastState).len + 1, 0);
+        states.add(curState, state);
+        int indexState;
 
-        for (p = last; p != -1 && (countLinks(states.get(p), c) != 0); p = states.get(p).link) {
-            states.get(p).next.put(c, cur); ///////////////////
+        for (indexState = lastState; indexState != -1 && (countLinks(states.get(indexState), c) == 0); indexState = states.get(indexState).link) {
+            states.get(indexState).next.put(c, curState);
         }
-        if (p == -1) {
-            states.get(cur).link = 0;
+        if (indexState == -1) {
+            states.get(curState).link = 0;
         } else {
-            int q = states.get(p).get(c);
-            if (states.get(p).len + 1 == states.get(q).len) {
-                states.get(cur).link = q;
+            int stateCurrentChar = states.get(indexState).stateChar(c);
+            if (states.get(indexState).len + 1 == states.get(stateCurrentChar).len) {
+                states.get(curState).link = stateCurrentChar;
             } else {
-                int clone = sz++;
-                State stateClone = new State(states.get(p).len + 1, states.get(q).link, states.get(q).next);
-                states.add(clone, stateClone);
-                for (; p != -1 && states.get(p).get(c) == q; p = states.get(p).link) {
-                    states.get(p).next.put(c, clone); //////////////////
+                int newState = numStates++;
+                State stateClone = new State(states.get(indexState).len + 1, states.get(stateCurrentChar).link, states.get(stateCurrentChar).next);
+                states.add(newState, stateClone);
+                for (; indexState != -1 && states.get(indexState).stateChar(c) == stateCurrentChar; indexState = states.get(indexState).link) {
+                    states.get(indexState).next.put(c, newState);
                 }
-                states.get(q).link = clone;
-                states.get(cur).link = clone;
+                states.get(stateCurrentChar).link = newState;
+                states.get(curState).link = newState;
             }
         }
-        last = cur;
+        lastState = curState;
     }
 
     private int countLinks(State state, Character c) {
-        return state.get(c);
+        return state.stateChar(c);
     }
 
-    public String lsc (String s, String t) {
+    public String lsc (String A, String B) {
         saInit();
 
-        for (int i = 0; i < s.length(); i++) {
-            saExtend(s.charAt(i));
+        for (int i = 0; i < A.length(); i++) {
+            saExtend(A.charAt(i));
         }
 
-        int v = 0, l = 0, best = 0, bestpos = 0;
+        int indexState = 0;
+        int currentLen = 0;
+        int max = 0;
+        int maxPos = 0;
 
-        for (int i = 0; i < t.length(); i++) {
-            while ((v != 0) && (countLinks(states.get(v), t.charAt(i)) != 0) ) {
-                v = states.get(v).link;
-                l = states.get(v).len;
+        for (int i = 0; i < B.length(); i++) {
+            while ((indexState != 0) && (countLinks(states.get(indexState), B.charAt(i)) == 0)) {
+                indexState = states.get(indexState).link;
+                currentLen = states.get(indexState).len;
             }
             int num;
-            if ((num = countLinks(states.get(v), t.charAt(i))) != 0) {
-                v = num;
-                l++;
+            if ((num = countLinks(states.get(indexState), B.charAt(i))) != 0) {
+                indexState = num;
+                currentLen++;
             }
-            if (l > best) {
-                best = l;
-                bestpos = i;
+            if (currentLen > max) {
+                max = currentLen;
+                maxPos = i;
             }
         }
-        return t.substring(bestpos - best + 1, best);
+        return B.substring(maxPos - max + 1, max);
     }
 
 }
